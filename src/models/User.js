@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const {Schema} = mongoose
+const bcrypt = require("bcrypt")
 
 const userSchema = new Schema({
   username: {
@@ -20,6 +21,23 @@ const userSchema = new Schema({
     minlength: 8,
   },
 });
+
+
+userSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("password")) {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
+  next();
+});
+
+userSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.password;
+    return ret;
+  },
+});
+ 
 
 const User = mongoose.model("User", userSchema)
 

@@ -1,10 +1,14 @@
+const handleError = require("../utils/handleError")
+const {createUser} = require("../services/authServices")
+
 const registerNewUser = async(req, res) => {
     try{
-        const data = req.body;
-        const newUser = await createUser(data)
+        const {username, email, password} = req.body;
+        const newUser = await createUser(username, email, password)
         res.status(201).json(newUser)
     }catch(err){
-        console.error("unable to create new user", err.message)
+        handleError(res,err)
+       
     }
 
 }
