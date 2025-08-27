@@ -11,7 +11,15 @@ const handleError = (res, err) => {
 
     if(err.code == 11000){
         const field = Object.keys(err.keyValue)[0]
-        res.status(409).json({error:`A user with that ${field} already exists`})
+        res.status(409).json({error:err.message})
+    }
+
+    if(err.statusCode === 400){
+        res.status(400).json({error:err.message})
+    }
+
+    if(err.statusCode === 404){
+        res.status(404).json({error:`NOT FOUND`})
     }
 }
 
